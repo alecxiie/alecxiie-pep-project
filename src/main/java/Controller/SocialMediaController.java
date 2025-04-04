@@ -90,24 +90,32 @@ public class SocialMediaController {
     }
 
     private void getMessageByIdHandler(Context context) {
-        context.json(messageService.getMessageById(
+        Message message = messageService.getMessageById(
             Integer.parseInt(context.pathParam("message_id"))
-        ));
+        );
+
+        if (message != null){
+            context.json(message);
+        }
     }
 
     private void deleteMessageHandler(Context context) {
-        context.json(messageService.deleteMessage(
+        Message message = messageService.deleteMessage(
             Integer.parseInt(context.pathParam("message_id"))
-        ));
+        );
 
+        if (message != null){
+            context.json(message);
+        }
     }
 
     private void patchMessageByIdHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
-        Message addedMessage = messageService.updateMessage(message.getMessage_id(), message.getMessage_text());
-        if (addedMessage != null){
-            context.json(mapper.writeValueAsString(addedMessage));
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+        Message updatedMessage = messageService.updateMessage(message_id, message.getMessage_text());
+        if (updatedMessage != null){
+            context.json(mapper.writeValueAsString(updatedMessage));
         } else {
             context.status(400);
         }

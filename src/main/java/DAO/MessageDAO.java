@@ -87,7 +87,7 @@ public class MessageDAO {
         Connection connection = ConnectionUtil.getConnection();
         try {
             String sql = "delete from message where message_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setInt(1, id);
             
@@ -101,8 +101,8 @@ public class MessageDAO {
     public void updateMessage(int id, String message_text){
         Connection connection = ConnectionUtil.getConnection();
         try {
-            String sql = "update message message_text = ? where message_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            String sql = "update message set message_text = ? where message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, message_text);
             preparedStatement.setLong(2, id);
@@ -122,7 +122,7 @@ public class MessageDAO {
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-            
+
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()){
                 Message message = new Message(
