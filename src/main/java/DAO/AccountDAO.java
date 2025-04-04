@@ -37,7 +37,7 @@ public class AccountDAO {
             
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setInt(1,id);
+            preparedStatement.setInt(1, id);
 
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()){
@@ -73,6 +73,53 @@ public class AccountDAO {
                 );
             }
         } catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Account getUser(String username){
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select * from account where username = ?";
+            
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, username);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Account account = new Account(
+                    rs.getInt("account_id"), 
+                    rs.getString("username"),
+                    rs.getString("password"));
+                return account;
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Account verifyAccount(Account account){
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "select * from account where username = ? and password = ?";
+            
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Account retrieved_account = new Account(
+                    rs.getInt("account_id"), 
+                    rs.getString("username"),
+                    rs.getString("password"));
+                return retrieved_account;
+            }
+        }catch(SQLException e){
             System.out.println(e.getMessage());
         }
         return null;
